@@ -1,4 +1,4 @@
-package com.devsuperior.hrworker.resources;
+package com.devsuperior.hrworker.controllers;
 
 import com.devsuperior.hrworker.entities.Worker;
 import com.devsuperior.hrworker.repositories.WorkerRepository;
