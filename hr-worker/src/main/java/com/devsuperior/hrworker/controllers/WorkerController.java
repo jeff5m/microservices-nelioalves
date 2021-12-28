@@ -2,6 +2,9 @@ package com.devsuperior.hrworker.controllers;
 
 import com.devsuperior.hrworker.entities.Worker;
 import com.devsuperior.hrworker.repositories.WorkerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +19,14 @@ import java.util.Optional;
 @RequestMapping("/workers")
 public class WorkerController {
 
-    private final WorkerRepository workerRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
 
-    public WorkerController(WorkerRepository workerRepository) {
+    private final WorkerRepository workerRepository;
+    private final Environment env;
+
+    public WorkerController(WorkerRepository workerRepository, Environment env) {
         this.workerRepository = workerRepository;
+        this.env = env;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -29,6 +36,9 @@ public class WorkerController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findById(@PathVariable Long id) {
+
+        LOGGER.info("Processing request with service running on port => {}", env.getProperty("local.server.port"));
+
         Optional<Worker> optionalWorker = workerRepository.findById(id);
 
         if (optionalWorker.isEmpty()) {
