@@ -2,28 +2,41 @@ package com.devsuperior.hrpayroll.services;
 
 import com.devsuperior.hrpayroll.entities.Payment;
 import com.devsuperior.hrpayroll.entities.Worker;
-import org.springframework.beans.factory.annotation.Value;
+import com.devsuperior.hrpayroll.feignclients.WorkerFeignClient;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class PaymentService {
 
-    private final RestTemplate restTemplate;
-    private final String workerServiceUrl;
+    private final WorkerFeignClient workerFeignClient;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public PaymentService(RestTemplate restTemplate,
-                          @Value("${hr-worker.host}") String workerServiceUrl) {
-        this.restTemplate = restTemplate;
-        this.workerServiceUrl = workerServiceUrl;
+    public PaymentService(WorkerFeignClient workerFeignClient) {
+        this.workerFeignClient = workerFeignClient;
     }
 
-    public Payment getPayment(Long workerId, Integer days) {
-        Map<String, String> uriVariables = Map.of("id", workerId.toString());
-        Worker worker = restTemplate.getForObject(workerServiceUrl + "/{id}", Worker.class, uriVariables);
-        return new Payment(worker.getName(), worker.getDailyIncome(), days);
+    public ResponseEntity<?> getPayment(Long workerId, Integer days) {
+
+        ResponseEntity<?> response;
+        try {
+            response = workerFeignClient.findById(workerId);
+        } catch (FeignException ex) {
+            return ResponseEntity.status(ex.status()).build();
+        }
+
+        Worker worker = objectMapper.convertValue(response.getBody(), new TypeReference<>() {});
+
+        if (Objects.isNull(worker)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(new Payment(worker.getName(), worker.getDailyIncome(), days));
     }
 
 }

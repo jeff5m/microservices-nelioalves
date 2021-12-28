@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/payments")
 public class PaymentController {
@@ -20,9 +22,10 @@ public class PaymentController {
     }
 
     @GetMapping(value = "/{worker-id}/days/{days}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Payment> getPaymentByWorkerIdAndDays(@PathVariable(name = "worker-id") Long workerId,
+    public ResponseEntity<?> getPaymentByWorkerIdAndDays(@PathVariable(name = "worker-id") Long workerId,
                                                                @PathVariable(name = "days") Integer days) {
-        return ResponseEntity.ok(paymentService.getPayment(workerId, days));
+
+        return paymentService.getPayment(workerId, days);
     }
 
 }
