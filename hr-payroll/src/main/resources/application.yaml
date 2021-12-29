@@ -1,10 +1,11 @@
 server:
   port: 8101
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
 spring:
   application:
     name: hr-payroll
-
-hr-worker:
-  ribbon:
-    listOfServers: localhost:8001, localhost:8002
