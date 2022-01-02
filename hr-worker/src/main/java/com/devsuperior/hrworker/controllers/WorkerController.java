@@ -37,6 +37,8 @@ public class WorkerController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findById(@PathVariable Long id) {
 
+//        Thread.sleep(3000); - Testing hystrix timout
+
         LOGGER.info("Processing request with service running on port => {}", env.getProperty("local.server.port"));
 
         Optional<Worker> optionalWorker = workerRepository.findById(id);
