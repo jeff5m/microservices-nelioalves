@@ -4,6 +4,7 @@ import com.devsuperior.hrworker.entities.Worker;
 import com.devsuperior.hrworker.repositories.WorkerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,9 @@ import java.util.Optional;
 public class WorkerController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WorkerController.class);
+
+    @Value("${test.config}")
+    private String testConfig;
 
     private final WorkerRepository workerRepository;
     private final Environment env;
@@ -48,6 +52,12 @@ public class WorkerController {
         }
 
         return ResponseEntity.ok(optionalWorker.get());
+    }
+
+    @GetMapping(value = "/configs")
+    public ResponseEntity<Void> listConfigs() {
+        LOGGER.info("CONFIG = {}", testConfig);
+        return ResponseEntity.noContent().build();
     }
 
 }
