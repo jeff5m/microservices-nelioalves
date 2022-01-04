@@ -24,7 +24,6 @@ public class HrUserApplication implements CommandLineRunner {
         SpringApplication.run(HrUserApplication.class, args);
     }
 
-
     @Override
     public void run(String... args) {
         String encodedPassword = bCrypt.encode("123456");
