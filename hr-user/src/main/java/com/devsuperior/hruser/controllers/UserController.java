@@ -1,6 +1,5 @@
 package com.devsuperior.hruser.controllers;
 
-import com.devsuperior.hruser.dtos.UserDTO;
 import com.devsuperior.hruser.entities.User;
 import com.devsuperior.hruser.repositories.UserRepository;
 import org.springframework.http.MediaType;
@@ -31,7 +30,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(UserDTO.fromEntity(optionalWorker.get()));
+        return ResponseEntity.ok(optionalWorker.get());
     }
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -42,7 +41,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(UserDTO.fromEntity(optionalUser.get()));
+        return ResponseEntity.ok(optionalUser.get());
     }
 
 }

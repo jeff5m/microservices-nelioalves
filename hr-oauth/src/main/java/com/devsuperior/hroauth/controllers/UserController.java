@@ -20,7 +20,12 @@ public class UserController {
 
     @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> findByEmail(@RequestParam("email") String email) {
-        return userService.findByEmail(email);
+
+        try {
+            return ResponseEntity.ok(userService.findByEmail(email));
+        } catch (Exception ex) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
